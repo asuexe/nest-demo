@@ -1,5 +1,6 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post } from '@nestjs/common';
 import { AppService } from './app.service';
+import { get } from 'http';
 
 @Controller('cats')
 export class catsController {
@@ -10,3 +11,4 @@ export class catsController {
     return this.appService.meow_meow();
   }
 }
+  

@@ -1,29 +1,48 @@
-import { Controller, Post, Body, UseGuards, Get, Request, BadRequestException } from '@nestjs/common';
+import { 
+  Controller, 
+  Post, 
+  Body, 
+  UseGuards, 
+  Get, 
+  Request, 
+  BadRequestException, 
+  UnauthorizedException 
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
+import { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './dto/login.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post("register")
-async register(@Body() body: { username: string; password: string }) {
-  try {
-    return await this.authService.register(body.username, body.password);
-  } catch (error) {
-    throw new BadRequestException(error.message);
+  @Post('register')
+  async register(@Body() body: RegisterDto) {
+    try {
+      const user = await this.authService.register(body);
+      return { message: 'User registered successfully', user };
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
   }
-}
-
 
   @Post('login')
-  login(@Body() body: { username: string; password: string }) {
-    return this.authService.login(body.username, body.password);
+  async login(@Body() body: LoginDto) {
+    try {
+      const token = await this.authService.login(body.username, body.password);
+      return { message: 'Login successful', access_token: token };
+    } catch (error) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
   }
 
   @Get('profile')
-  @UseGuards(JwtAuthGuard) // Protect route with JWT authentication
+  @UseGuards(JwtAuthGuard)
   getProfile(@Request() req) {
-    return { message: 'Profile data', user: req.user };
+    return { 
+      message: 'Profile data fetched successfully', 
+      user: req.user 
+    };
   }
 }

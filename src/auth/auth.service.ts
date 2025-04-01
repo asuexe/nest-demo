@@ -44,6 +44,10 @@ export class AuthService {
     const user = await this.userRepository.findOne({
       where: [{ username: identifier }, { email: identifier }],
     });
+    // console.log('User found:', user);
+    const isPasswordValid = user && (await bcrypt.compare(password, user.password));
+    console.log('Password valid:', isPasswordValid);
+
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return { message: 'Invalid credentials' };

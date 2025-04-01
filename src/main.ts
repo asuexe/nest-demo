@@ -6,9 +6,16 @@ async function bootstrap() {
 
   // Enable CORS
   app.enableCors({
-    origin: 'http://localhost:5173', // Allow requests from frontend
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true,
+    origin: 'http://localhost:5173',  // ✅ Allow frontend origin
+    credentials: true,  // ✅ Allow cookies & authorization headers
+    allowedHeaders: [
+      'Authorization',
+      'X-Auth-Token',
+      'Content-Type',
+      'Accept'
+    ],  // ✅ Ensure headers are allowed
+    exposedHeaders: ['Authorization', 'X-Auth-Token'], // ✅ Allow reading token headers
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],  // ✅ Allow all required HTTP methods
   });
 
   await app.listen(3000);

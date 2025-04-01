@@ -40,8 +40,8 @@ export class AuthController {
   @Get('profile')
   @UseGuards(JwtAuthGuard)
   getProfile(@Request() req) {
-    return { 
-      message: 'Profile data fetched successfully', 
+    console.log("Profile request received");
+    return {  
       user: req.user 
     };
   }

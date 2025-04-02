@@ -5,8 +5,10 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './jwt.strategy';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './user.entity';
+import { User } from '../user/user.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from '../guards/roles.guard';
 
 @Module({
   imports: [
@@ -23,7 +25,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, JwtStrategy,{
+    provide: APP_GUARD,
+    useClass: RolesGuard,
+  },],
   exports: [AuthService],
 })
 export class AuthModule {}

@@ -1,5 +1,12 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
+export enum UserRole {
+  VIEWER = 'viewer',
+  UPDATER = 'updater',
+  SUPERUSER = 'superuser',
+}
+
+
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
@@ -20,8 +27,9 @@ export class User {
   @Column()
   password: string;
 
-  @Column()
-  role: string;
+  @Column({ type: 'enum', enum: UserRole, default: UserRole.VIEWER })
+  role: UserRole;
+  
 
   @Column()
   phoneNo: string;
